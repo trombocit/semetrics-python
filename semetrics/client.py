@@ -9,7 +9,7 @@ from .worker import BackgroundWorker
 
 logger = logging.getLogger(__name__)
 
-SDK_VERSION = "0.1.0"
+SDK_VERSION = "0.3.0"
 
 
 class Semetrics:
@@ -17,7 +17,7 @@ class Semetrics:
     Клиент Semetrics для Python.
 
     Пример использования:
-        semetrics = Semetrics(api_key="sm_live_...", endpoint="https://semetrics.ru/events")
+        semetrics = Semetrics(api_key="sm_live_...", endpoint="https://semetrics.ru/events", source_id="svc_tasks")
         semetrics.track("user_signed_up", user_id="u123", properties={"plan": "pro"})
         semetrics.shutdown()  # при завершении программы
     """
@@ -26,6 +26,7 @@ class Semetrics:
         self,
         api_key: str,
         endpoint: str = "https://semetrics.ru/events",
+        source_id: Optional[str] = None,
         flush_interval: int = 5,
         batch_size: int = 50,
         max_queue_size: int = 10_000,
@@ -33,6 +34,7 @@ class Semetrics:
         request_timeout: int = 10,
         persistence_path: Optional[str] = None,
     ):
+        self._source_id = source_id
         self._queue = EventQueue(max_size=max_queue_size, persistence_path=persistence_path)
         self._transport = HttpTransport(api_key=api_key, endpoint=endpoint, timeout=request_timeout)
         self._worker = BackgroundWorker(
@@ -62,6 +64,7 @@ class Semetrics:
             user_id=user_id,
             anonymous_id=anonymous_id,
             session_id=session_id,
+            source_id=self._source_id,
             platform="python",
             sdk_version=SDK_VERSION,
             properties=properties,

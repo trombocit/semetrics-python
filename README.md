@@ -17,6 +17,7 @@ from semetrics import Semetrics
 semetrics = Semetrics(
     api_key="sm_live_ваш_ключ",
     endpoint="https://semetrics.ru/events",
+    source_id="svc_my_service",   # имя сервиса или bundle id
 )
 
 # Отправка событий (не блокирует — очередь + фоновый поток)
@@ -50,6 +51,7 @@ with Semetrics(api_key="sm_live_...", endpoint="https://semetrics.ru/events") as
 |----------|-------------|----------|
 | `api_key` | обязательный | API-ключ проекта (`sm_live_...`) |
 | `endpoint` | `https://semetrics.ru/events` | URL сервиса |
+| `source_id` | `None` | Идентификатор источника (`svc_tasks`, `com.bv.wfm`) |
 | `flush_interval` | `5` | Интервал фонового сброса (секунды) |
 | `batch_size` | `50` | Максимум событий в одном запросе |
 | `max_queue_size` | `10_000` | Максимум событий в памяти |
@@ -88,3 +90,5 @@ semetrics.flush()
 | `session_id` | str | — | ID сессии |
 | `properties` | dict | — | Произвольные свойства события |
 | `client_ts` | datetime | — | Время события (по умолчанию — `now()`) |
+
+> `source_id` задаётся при инициализации клиента и автоматически проставляется во все события — в `track()` его не нужно передавать.

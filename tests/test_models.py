@@ -16,11 +16,12 @@ def test_to_dict_minimal():
     d = event.to_dict()
     assert d["event_name"] == "test_event"
     assert d["platform"] == "python"
-    assert d["sdk_version"] == "0.1.0"
+    assert d["sdk_version"] == "0.3.0"
     assert d["properties"] == {}
     assert d["user_id"] is None
     assert d["anonymous_id"] is None
     assert d["session_id"] is None
+    assert d["source_id"] == ""
 
 
 def test_to_dict_datetime_iso():
@@ -44,3 +45,15 @@ def test_to_dict_excludes_db_id():
 def test_db_id_default_none():
     event = make_event()
     assert event.db_id is None
+
+
+def test_source_id_propagates():
+    event = make_event(source_id="svc_tasks")
+    d = event.to_dict()
+    assert d["source_id"] == "svc_tasks"
+
+
+def test_source_id_none_becomes_empty_string():
+    event = make_event()
+    d = event.to_dict()
+    assert d["source_id"] == ""

@@ -11,8 +11,9 @@ class Event:
     user_id: Optional[str] = None
     anonymous_id: Optional[str] = None
     session_id: Optional[str] = None
+    source_id: Optional[str] = None
     platform: str = "python"
-    sdk_version: str = "0.1.0"
+    sdk_version: str = "0.3.0"
     properties: Optional[dict[str, Any]] = None
     db_id: Optional[int] = None  # SQLite rowid, None для in-memory событий
 
@@ -22,6 +23,7 @@ class Event:
             "user_id": self.user_id,
             "anonymous_id": self.anonymous_id,
             "session_id": self.session_id,
+            "source_id": self.source_id or "",
             "platform": self.platform,
             "sdk_version": self.sdk_version,
             "client_ts": self.client_ts.isoformat(),
